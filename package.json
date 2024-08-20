@@ -1,0 +1,23 @@
+{
+  "name": "@tenoxui/static-css-generator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "uglifyjs ./index.js -c -m toplevel --mangle-props -o dist/js/cli.min.js --source-map \"url='cli.min.js.map'\" --comments \"/^!/\" --keep-fnames"
+  },
+  "bin": {
+    "tenoxui-cli": "./index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "node-html-parser": "^6.1.13"
+  },
+  "devDependencies": {
+    "chokidar": "^3.6.0",
+    "commander": "^12.1.0",
+    "glob": "^11.0.0"
+  }
+}

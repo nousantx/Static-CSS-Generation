@@ -1,0 +1,6 @@
+.gradient-primary { background-image: linear-gradient(to right, purple, #ccf654); }
+.text-red { color: red; }
+.text-rex:hover { color: #0000ff; }
+.gradient-blue:hover { background-image: linear-gradient(to right, purple, blue); }
+.se-flex { display: flex; }
+.b-tenox:hover { display: block; }
