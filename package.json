@@ -10,18 +10,16 @@
     "tenoxui-cli": "./src/js/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "NOuSantx",
   "license": "ISC",
   "description": "",
-  "dependencies": {
-    "node-html-parser": "^6.1.13"
-  },
   "devDependencies": {
     "@vitest/ui": "^0.25.8",
     "chokidar": "^3.6.0",
     "commander": "^12.1.0",
-    "fast-glob": "^3.3.2",
     "glob": "^11.0.0",
+    "node-html-parser": "^6.1.13",
+    "tiny-glob": "^0.2.9",
     "vitest": "^1.0.0"
   }
 }
