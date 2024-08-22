@@ -1,5 +1,5 @@
 // tenoxui.config.js
-module.exports = {
+export default {
   property: {
     bg: "background-color",
     text: "color",

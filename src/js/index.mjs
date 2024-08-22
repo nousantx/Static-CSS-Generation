@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
-const { parse } = require("node-html-parser");
-const glob = require("glob");
-const { Command } = require("commander");
-const chokidar = require("chokidar");
+import fs from "fs";
+import fg from "fast-glob";
+import path from "path";
+import { parse } from "node-html-parser";
+import { Command } from "commander";
+import chokidar from "chokidar";
 
-class GenerateCSS {
+export class GenerateCSS {
   constructor(config) {
     // validate the config at initialization
     this.validateConfig(config);
@@ -23,9 +23,12 @@ class GenerateCSS {
     const requiredFields = ["input", "output", "property"];
     requiredFields.forEach(field => {
       if (!config[field]) {
-        throw new Error(`Missing required configuration field: ${field}`);
+        console.error(`Missing required configuration field: ${field}`);
       }
     });
+
+    config.values = config.values || {};
+    config.classes = config.classes || {};
   }
 
   // utility to convert kebab-type to camelCase
@@ -208,20 +211,19 @@ class GenerateCSS {
     return null;
   }
 
-
-// create rules
+  // create rules
   create(classNames) {
     (Array.isArray(classNames) ? classNames : classNames.split(/\s+/)).forEach(className => this.parseClass(className));
     return Array.from(this.generatedCSS).join("\n");
   }
 
-// create and scan from files
+  // create and scan from files
   generateFromFiles() {
     const classNames = new Set();
 
     if (this.config.input) {
       this.config.input.forEach(pattern => {
-        glob.sync(pattern).forEach(file => {
+        fg.sync(pattern).forEach(file => {
           this.parseFile(file).forEach(className => classNames.add(className));
         });
       });
@@ -238,37 +240,41 @@ class GenerateCSS {
   }
 }
 
-function main() {
-  const program = new Command();
+const config = {
+  property: {
+    bg: "background-color",
+    text: "color",
+    gradient: {
+      property: "backgroundImage",
+      value: "linear-gradient(to right, purple, {value})"
+    },
+    p: "padding",
+    br: "borderRadius",
+    "border-color": "--bdr-clr", // css output example : .border-color-{value} { --bdr-clr: {value}; }
+    size: ["width", "height"], // css output example : .box-{value} { width: {value}; height: {value} }
+    flex: {
+      property: ["justifyContent", "alignItems"],
+      value: "{value}"
+    }
+  },
+  values: {
+    primary: "#ccf654",
+    rex: "#0000ff"
+  },
+  classes: {
+    display: {
+      "se-flex": "flex",
+      "b-tenox": "block"
+    },
+    alignItems: {
+      "se-flex": "center"
+    }
+  },
+  input: [path.resolve(process.cwd(), "index.html")],
+  output: path.resolve(process.cwd(), "dist/styles.css")
+};
 
-  program
-    .version("1.0.0")
-    .description("Generate CSS from class names in your project files.")
-    .option("-w, --watch", "Watch mode to regenerate CSS on file changes")
-    .option("-c, --config <path>", "Path to the configuration file", "tenoxui.config.js")
-    .parse(process.argv);
-
-  const options = program.opts();
-  const configPath = path.resolve(process.cwd(), options.config);
-
-  if (!fs.existsSync(configPath)) {
-    console.error("No configuration file found!");
-    process.exit(1);
-  }
-
-  const config = require(configPath);
-  const generator = new GenerateCSS(config);
-
-  generator.generateFromFiles();
-
-  if (options.watch) {
-    const watcher = chokidar.watch(config.input, { ignoreInitial: true });
-    watcher.on("all", () => generator.generateFromFiles());
-  }
-}
-
-if (require.main === module) {
-  main();
-}
-
-module.exports = GenerateCSS;
+const generator = new GenerateCSS(config);
+// generator.generateFromFiles();
+console.log(generator.matchClass("hover:bg-primary"));
+console.log(generator.create("p-[calc(1rem\\_+\\_10px)]"));
