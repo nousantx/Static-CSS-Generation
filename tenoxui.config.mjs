@@ -29,6 +29,11 @@ export default {
       "se-flex": "center"
     }
   },
-  input: ["index.html", "*.jsx"],
+  input: [
+    "./src/**/*.html",
+    "./src/**/*.jsx",
+    "./src/**/*.tsx",
+    "./src/**/*.mdx",
+  ],
   output: "dist/styles.css"
 };

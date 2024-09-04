@@ -4,8 +4,6 @@ import fs from "fs";
 import { glob } from "glob";
 import path from "path";
 import { parse } from "node-html-parser";
-import { Command } from "commander";
-import chokidar from "chokidar";
 
 export class GenerateCSS {
   constructor(config) {
@@ -68,6 +66,25 @@ export class GenerateCSS {
       match[1].split(/\s+/).forEach(className => classNames.add(className));
     }
     return Array.from(classNames);
+  }
+  parseVue(content) {
+    const templateClassNames = this.parseHTML(content.match(/<template>([\s\S]*?)<\/template>/i)?.[1] || "");
+    const scriptClassNames = this.parseJSX(content.match(/<script>([\s\S]*?)<\/script>/i)?.[1] || "");
+    return [...new Set([...templateClassNames, ...scriptClassNames])];
+  }
+
+  parseSvelte(content) {
+    const htmlClassNames = this.parseHTML(content);
+    const scriptClassNames = this.parseJSX(content.match(/<script>([\s\S]*?)<\/script>/i)?.[1] || "");
+    return [...new Set([...htmlClassNames, ...scriptClassNames])];
+  }
+
+  parseAstro(content) {
+    const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
+    const contentWithoutFrontmatter = content.replace(frontmatterRegex, "");
+    const htmlClassNames = this.parseHTML(contentWithoutFrontmatter);
+    const jsxClassNames = this.parseJSX(contentWithoutFrontmatter);
+    return [...new Set([...htmlClassNames, ...jsxClassNames])];
   }
 
   // mdx parser

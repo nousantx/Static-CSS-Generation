@@ -1,25 +1,23 @@
 {
-  "name": "@tenoxui/static-css-generator",
+  "name": "@nousantx/static-css-tenoxui",
   "version": "1.0.0",
   "main": "./src/js/index.js",
   "scripts": {
-    "build": "uglifyjs ./index.js -c -m toplevel --mangle-props -o dist/js/cli.min.js --source-map \"url='cli.min.js.map'\" --comments \"/^!/\" --keep-fnames",
+    "build": "uglifyjs ./src/js/index.js -c -m toplevel --mangle-props -o dist/index.min.js --source-map \"url='index.min.js.map'\" --comments \"/^!/\" --keep-fnames && cp ./src/js/index.js ./dist/index.js",
     "test": "vitest"
   },
   "bin": {
-    "tenoxui-cli": "./src/js/index.js"
+    "static-tcss": "./dist/index.min.js"
   },
   "keywords": [],
   "author": "NOuSantx",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@vitest/ui": "^0.25.8",
     "chokidar": "^3.6.0",
     "commander": "^12.1.0",
     "glob": "^11.0.0",
     "node-html-parser": "^6.1.13",
-    "tiny-glob": "^0.2.9",
     "vitest": "^1.0.0"
   }
 }

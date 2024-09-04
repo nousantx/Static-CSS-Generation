@@ -29,7 +29,7 @@ describe("GenerateCSS", () => {
           center: "center"
         }
       },
-      input: [path.resolve(process.cwd(), "index.html")],
+      input: [path.resolve(process.cwd(), "src/apps/index.html")],
       output: path.resolve(process.cwd(), "test-output.css")
     };
     generator = new GenerateCSS(config);
